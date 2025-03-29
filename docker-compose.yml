@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  foodtracker_app:
+    image: "foodtracker-foodtracker_app"
+    build:
+      context: .
+    container_name: foodtracker_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - foodtracker_postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://foodtracker_postgres:5433/foodtracker_db
+      - SPRING_DATASOURCE_USERNAME=foodtracker_user
+      - SPRING_DATASOURCE_PASSWORD=foodtracker_pass
+
+  foodtracker_postgres:
+    image: postgres:14.8-alpine3.18
+    environment:
+      POSTGRES_USER: "foodtracker_user"
+      POSTGRES_PASSWORD: "foodtracker_pass"
+      POSTGRES_DB: "foodtracker_db"
+      PGPORT: 5433
+    ports:
+      - "5433:5432"
+
+  foodtracker_postgres_test:
+    image: postgres:14.8-alpine3.18
+    environment:
+       POSTGRES_DB: "foodtracker_db_test"
+       POSTGRES_USER: "foodtracker_user_test"
+       POSTGRES_PASSWORD: "foodtracker_pass_test"
+    ports:
+      - "5434:5432"
